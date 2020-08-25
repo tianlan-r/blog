@@ -20,17 +20,20 @@
     var CONFIG = {"hostname":"tianlan-r.github.io","root":"/blog/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="标签">
-<meta property="og:url" content="https://tianlan-r.github.io/blog/tags/index.html">
+  <meta name="description" content="在启动NioEndpoint组件时，除了会启动Acceptor线程外，还会启动Poller线程 123456&#x2F;&#x2F; Start poller threadpoller &#x3D; new Poller();Thread pollerThread &#x3D; new Thread(poller, getName() + &quot;-ClientPoller&quot;);pollerThread.setPriori">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Poller线程">
+<meta property="og:url" content="https://tianlan-r.github.io/blog/2020/08/26/Poller%E7%BA%BF%E7%A8%8B/index.html">
 <meta property="og:site_name" content="博客">
+<meta property="og:description" content="在启动NioEndpoint组件时，除了会启动Acceptor线程外，还会启动Poller线程 123456&#x2F;&#x2F; Start poller threadpoller &#x3D; new Poller();Thread pollerThread &#x3D; new Thread(poller, getName() + &quot;-ClientPoller&quot;);pollerThread.setPriori">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-08-25T16:28:33.000Z">
-<meta property="article:modified_time" content="2020-08-25T16:31:14.156Z">
+<meta property="article:published_time" content="2020-08-25T17:06:23.000Z">
+<meta property="article:modified_time" content="2020-08-25T17:48:07.414Z">
 <meta property="article:author" content="天蓝">
+<meta property="article:tag" content="tomcat">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://tianlan-r.github.io/blog/tags/">
+<link rel="canonical" href="https://tianlan-r.github.io/blog/2020/08/26/Poller%E7%BA%BF%E7%A8%8B/">
 
 
 <script id="page-configurations">
@@ -38,13 +41,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>标签 | 博客
-</title>
+  <title>Poller线程 | 博客</title>
   
 
 
@@ -174,51 +176,91 @@
       <div class="main-inner">
         <div class="content-wrap">
           
-  
-  
 
-          <div class="content page posts-expand">
+          <div class="content post posts-expand">
             
 
     
-    
-    
-    <div class="post-block" lang="zh-CN">
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://tianlan-r.github.io/blog/2020/08/26/Poller%E7%BA%BF%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.jpg">
+      <meta itemprop="name" content="天蓝">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="博客">
+    </span>
       <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Poller线程
+        </h1>
 
-<h1 class="post-title" itemprop="name headline">标签
-</h1>
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
 
-<div class="post-meta">
+              <time title="创建时间：2020-08-26 01:06:23 / 修改时间：01:48:07" itemprop="dateCreated datePublished" datetime="2020-08-26T01:06:23+08:00">2020-08-26</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>在启动NioEndpoint组件时，除了会启动Acceptor线程外，还会启动Poller线程</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Start poller thread</span></span><br><span class="line">poller = <span class="keyword">new</span> Poller();</span><br><span class="line">Thread pollerThread = <span class="keyword">new</span> Thread(poller, getName() + <span class="string">&quot;-ClientPoller&quot;</span>);</span><br><span class="line">pollerThread.setPriority(threadPriority);</span><br><span class="line">pollerThread.setDaemon(<span class="keyword">true</span>);</span><br><span class="line">pollerThread.start();</span><br></pre></td></tr></table></figure>
+
+<p>Poller线程的任务：</p>
+<ul>
+<li>轮询PollerEvent队列，将队列里面interestOps为OP_REGISTER的元素对应的SocketChannel注册到Selector，监听的事件为SelectionKey.OP_READ。然后将这个PollerEvent重置并放入缓存，以便复用。</li>
+<li>当Selector监听到通道“读就绪”时，用这条通道对应的包装类NioSocketWrapper来构建一个SocketProcessor实例，然后将这个实例提交给线程池Executor处理。</li>
+<li>循环执行上面两个任务。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/tomcat/" rel="tag"># tomcat</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2020/08/25/hello-world/" rel="prev" title="Hello World">
+      <i class="fa fa-chevron-left"></i> Hello World
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
   
 
-</div>
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
-          <div class="tag-cloud">
-            <div class="tag-cloud-title">
-              目前共计 1 个标签
-            </div>
-            <div class="tag-cloud-tags">
-              <a href="/blog/tags/tomcat/" style="font-size: 12px; color: #ccc">tomcat</a>
-            </div>
-          </div>
-        
-      </div>
-      
-      
-      
-    </div>
-    
-
-    
-    
-    
 
 
           </div>

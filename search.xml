@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Poller线程</title>
+    <url>/blog/2020/08/26/Poller%E7%BA%BF%E7%A8%8B/</url>
+    <content><![CDATA[<p>在启动NioEndpoint组件时，除了会启动Acceptor线程外，还会启动Poller线程</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Start poller thread</span></span><br><span class="line">poller = <span class="keyword">new</span> Poller();</span><br><span class="line">Thread pollerThread = <span class="keyword">new</span> Thread(poller, getName() + <span class="string">&quot;-ClientPoller&quot;</span>);</span><br><span class="line">pollerThread.setPriority(threadPriority);</span><br><span class="line">pollerThread.setDaemon(<span class="keyword">true</span>);</span><br><span class="line">pollerThread.start();</span><br></pre></td></tr></table></figure>
+
+<p>Poller线程的任务：</p>
+<ul>
+<li>轮询PollerEvent队列，将队列里面interestOps为OP_REGISTER的元素对应的SocketChannel注册到Selector，监听的事件为SelectionKey.OP_READ。然后将这个PollerEvent重置并放入缓存，以便复用。</li>
+<li>当Selector监听到通道“读就绪”时，用这条通道对应的包装类NioSocketWrapper来构建一个SocketProcessor实例，然后将这个实例提交给线程池Executor处理。</li>
+<li>循环执行上面两个任务。</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>tomcat</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Hello World</title>
     <url>/blog/2020/08/25/hello-world/</url>
     <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
