@@ -18,6 +18,37 @@
       </tags>
   </entry>
   <entry>
+    <title>Spring文档翻译</title>
+    <url>/blog/2020/09/28/Spring%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91/</url>
+    <content><![CDATA[<h2 id="1-IoC容器"><a href="#1-IoC容器" class="headerlink" title="1 IoC容器"></a>1 IoC容器</h2><h3 id="1-8-容器扩展点"><a href="#1-8-容器扩展点" class="headerlink" title="1.8 容器扩展点"></a>1.8 容器扩展点</h3><p>可以通过实现指定的集成接口来扩展Spring IoC容器</p>
+<h4 id="1-8-1-使用BeanPostProcessor来自定义Beans"><a href="#1-8-1-使用BeanPostProcessor来自定义Beans" class="headerlink" title="1.8.1 使用BeanPostProcessor来自定义Beans"></a>1.8.1 使用BeanPostProcessor来自定义Beans</h4>]]></content>
+      <tags>
+        <tag>Spring</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>将PointcutAdvisor转化成拦截器列表</title>
+    <url>/blog/2020/10/05/%E5%B0%86PointcutAdvisor%E8%BD%AC%E5%8C%96%E6%88%90%E6%8B%A6%E6%88%AA%E5%99%A8%E5%88%97%E8%A1%A8/</url>
+    <content><![CDATA[<p>利用DefaultAdvisorAdapterRegistry的#getInterceptors方法将PointcutAdvisor转换为拦截器列表</p>
+<p>在构建DefaultAdvisorAdapterRegistry的时候已经注册了三个适配器</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> List&lt;AdvisorAdapter&gt; adapters = <span class="keyword">new</span> ArrayList&lt;&gt;(<span class="number">3</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">DefaultAdvisorAdapterRegistry</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	registerAdvisorAdapter(<span class="keyword">new</span> MethodBeforeAdviceAdapter());</span><br><span class="line">	registerAdvisorAdapter(<span class="keyword">new</span> AfterReturningAdviceAdapter());</span><br><span class="line">	registerAdvisorAdapter(<span class="keyword">new</span> ThrowsAdviceAdapter());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">registerAdvisorAdapter</span><span class="params">(AdvisorAdapter adapter)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.adapters.add(adapter);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> MethodInterceptor[] getInterceptors(Advisor advisor) <span class="keyword">throws</span> UnknownAdviceTypeException &#123;</span><br><span class="line">	List&lt;MethodInterceptor&gt; interceptors = <span class="keyword">new</span> ArrayList&lt;&gt;(<span class="number">3</span>);</span><br><span class="line">	Advice advice = advisor.getAdvice();</span><br><span class="line">       <span class="comment">// 如果通知是MethodInterceptor类型，就不用转换</span></span><br><span class="line">	<span class="keyword">if</span> (advice <span class="keyword">instanceof</span> MethodInterceptor) &#123;</span><br><span class="line">		interceptors.add((MethodInterceptor) advice);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> (AdvisorAdapter adapter : <span class="keyword">this</span>.adapters) &#123;</span><br><span class="line">           <span class="comment">// 判断适配器是否支持该通知</span></span><br><span class="line">		<span class="keyword">if</span> (adapter.supportsAdvice(advice)) &#123;</span><br><span class="line">			interceptors.add(adapter.getInterceptor(advisor));</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (interceptors.isEmpty()) &#123;</span><br><span class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> UnknownAdviceTypeException(advisor.getAdvice());</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> interceptors.toArray(<span class="keyword">new</span> MethodInterceptor[<span class="number">0</span>]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>判断适配器是否支持该通知，实际上就是判断通知的类型是否与该适配器对应的类型一致，比如：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">supportsAdvice</span><span class="params">(Advice advice)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> (advice <span class="keyword">instanceof</span> MethodBeforeAdvice);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果通知实现了MethodBeforeAdvice接口，那MethodBeforeAdviceAdapter适配器就支持该通知。</p>
+<p>重点就在适配器的#getInterceptor方法。这个方法其实就是生成对应的MethodInterceptor，比如：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> MethodInterceptor <span class="title">getInterceptor</span><span class="params">(Advisor advisor)</span> </span>&#123;</span><br><span class="line">	MethodBeforeAdvice advice = (MethodBeforeAdvice) advisor.getAdvice();</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">new</span> MethodBeforeAdviceInterceptor(advice);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从上面可以看出，通知类实现了哪几个接口，就会生成几个对应的拦截器组成拦截器链。</p>
+]]></content>
+      <tags>
+        <tag>Spring</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Tomcat中的一些优化手段</title>
     <url>/blog/2020/08/27/Tomcat%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E4%BC%98%E5%8C%96%E6%89%8B%E6%AE%B5/</url>
     <content><![CDATA[<h2 id="对于需要频繁创建和销毁的对象的优化"><a href="#对于需要频繁创建和销毁的对象的优化" class="headerlink" title="对于需要频繁创建和销毁的对象的优化"></a>对于需要频繁创建和销毁的对象的优化</h2><p>在需要频繁创建和销毁对象的场景中，我们可以将用过的对象缓存起来，在下一次需要的时候就从缓存中取，然后替换或者重置这个对象中的某些对应属性，就可以重复使用这个对象了，避免了每次创建和销毁对象的开销，有点类似于线程池，使用完了就放回池中，下次需要的时候就从池中拿。</p>

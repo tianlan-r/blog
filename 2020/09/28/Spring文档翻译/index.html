@@ -20,20 +20,20 @@
     var CONFIG = {"hostname":"tianlan-r.github.io","root":"/blog/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="对于需要频繁创建和销毁的对象的优化在需要频繁创建和销毁对象的场景中，我们可以将用过的对象缓存起来，在下一次需要的时候就从缓存中取，然后替换或者重置这个对象中的某些对应属性，就可以重复使用这个对象了，避免了每次创建和销毁对象的开销，有点类似于线程池，使用完了就放回池中，下次需要的时候就从池中拿。">
+  <meta name="description" content="1 IoC容器1.8 容器扩展点可以通过实现指定的集成接口来扩展Spring IoC容器 1.8.1 使用BeanPostProcessor来自定义Beans">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Tomcat中的一些优化手段">
-<meta property="og:url" content="https://tianlan-r.github.io/blog/2020/08/27/Tomcat%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E4%BC%98%E5%8C%96%E6%89%8B%E6%AE%B5/index.html">
+<meta property="og:title" content="Spring文档翻译">
+<meta property="og:url" content="https://tianlan-r.github.io/blog/2020/09/28/Spring%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91/index.html">
 <meta property="og:site_name" content="博客">
-<meta property="og:description" content="对于需要频繁创建和销毁的对象的优化在需要频繁创建和销毁对象的场景中，我们可以将用过的对象缓存起来，在下一次需要的时候就从缓存中取，然后替换或者重置这个对象中的某些对应属性，就可以重复使用这个对象了，避免了每次创建和销毁对象的开销，有点类似于线程池，使用完了就放回池中，下次需要的时候就从池中拿。">
+<meta property="og:description" content="1 IoC容器1.8 容器扩展点可以通过实现指定的集成接口来扩展Spring IoC容器 1.8.1 使用BeanPostProcessor来自定义Beans">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-08-26T22:27:40.000Z">
-<meta property="article:modified_time" content="2020-08-26T23:31:11.492Z">
+<meta property="article:published_time" content="2020-09-27T19:37:02.000Z">
+<meta property="article:modified_time" content="2020-09-27T19:56:46.194Z">
 <meta property="article:author" content="天蓝">
-<meta property="article:tag" content="tomcat">
+<meta property="article:tag" content="Spring">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://tianlan-r.github.io/blog/2020/08/27/Tomcat%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E4%BC%98%E5%8C%96%E6%89%8B%E6%AE%B5/">
+<link rel="canonical" href="https://tianlan-r.github.io/blog/2020/09/28/Spring%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91/">
 
 
 <script id="page-configurations">
@@ -46,7 +46,7 @@
   };
 </script>
 
-  <title>Tomcat中的一些优化手段 | 博客</title>
+  <title>Spring文档翻译 | 博客</title>
   
 
 
@@ -184,7 +184,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://tianlan-r.github.io/blog/2020/08/27/Tomcat%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E4%BC%98%E5%8C%96%E6%89%8B%E6%AE%B5/">
+    <link itemprop="mainEntityOfPage" href="https://tianlan-r.github.io/blog/2020/09/28/Spring%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blog/images/avatar.jpg">
@@ -197,7 +197,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Tomcat中的一些优化手段
+          Spring文档翻译
         </h1>
 
         <div class="post-meta">
@@ -208,7 +208,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-08-27 06:27:40 / 修改时间：07:31:11" itemprop="dateCreated datePublished" datetime="2020-08-27T06:27:40+08:00">2020-08-27</time>
+              <time title="创建时间：2020-09-28 03:37:02 / 修改时间：03:56:46" itemprop="dateCreated datePublished" datetime="2020-09-28T03:37:02+08:00">2020-09-28</time>
             </span>
 
           
@@ -222,18 +222,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="对于需要频繁创建和销毁的对象的优化"><a href="#对于需要频繁创建和销毁的对象的优化" class="headerlink" title="对于需要频繁创建和销毁的对象的优化"></a>对于需要频繁创建和销毁的对象的优化</h2><p>在需要频繁创建和销毁对象的场景中，我们可以将用过的对象缓存起来，在下一次需要的时候就从缓存中取，然后替换或者重置这个对象中的某些对应属性，就可以重复使用这个对象了，避免了每次创建和销毁对象的开销，有点类似于线程池，使用完了就放回池中，下次需要的时候就从池中拿。</p>
-<a id="more"></a>
-
-<p>Tomcat在很多地方都用到了这种优化方式，以NioChannel为例，NioChannel是对SocketChannel的封装，即一个连接就会对应一个NioChannel对象。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用一个栈来缓存NioChannel对象</span></span><br><span class="line"><span class="keyword">private</span> SynchronizedStack&lt;NioChannel&gt; nioChannels;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 当连接到来时，先从缓存中取</span></span><br><span class="line"><span class="keyword">if</span> (nioChannels != <span class="keyword">null</span>) &#123;</span><br><span class="line">    channel = nioChannels.pop();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (channel == <span class="keyword">null</span>) &#123;</span><br><span class="line">    <span class="comment">// 缓存中没有的话，就创建新对象</span></span><br><span class="line">    <span class="comment">// SocketBufferHandler是NioChannel中的一个组件</span></span><br><span class="line">    SocketBufferHandler bufhandler = <span class="keyword">new</span> SocketBufferHandler(socketProperties.getAppReadBufSize(), socketProperties.getAppWriteBufSize(), socketProperties.getDirectBuffer());</span><br><span class="line">    <span class="keyword">if</span> (isSSLEnabled()) &#123;</span><br><span class="line">        channel = <span class="keyword">new</span> SecureNioChannel(bufhandler, selectorPool, <span class="keyword">this</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        channel = <span class="keyword">new</span> NioChannel(bufhandler);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// NioSocketWrapper是NioChannel的包装类</span></span><br><span class="line">NioSocketWrapper newWrapper = <span class="keyword">new</span> NioSocketWrapper(channel, <span class="keyword">this</span>);</span><br><span class="line"><span class="comment">// 重置NioChannel对象，即把NioChannel对象的属性与当前连接对应，同时也会重置它内部的SocketBufferHandler组件</span></span><br><span class="line">channel.reset(socket, newWrapper);</span><br></pre></td></tr></table></figure>
-
-<p>当关闭连接时，会把这个NioChannel重新入栈</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nioChannels.push(getSocket())</span><br></pre></td></tr></table></figure>
-
-
-
-
+        <h2 id="1-IoC容器"><a href="#1-IoC容器" class="headerlink" title="1 IoC容器"></a>1 IoC容器</h2><h3 id="1-8-容器扩展点"><a href="#1-8-容器扩展点" class="headerlink" title="1.8 容器扩展点"></a>1.8 容器扩展点</h3><p>可以通过实现指定的集成接口来扩展Spring IoC容器</p>
+<h4 id="1-8-1-使用BeanPostProcessor来自定义Beans"><a href="#1-8-1-使用BeanPostProcessor来自定义Beans" class="headerlink" title="1.8.1 使用BeanPostProcessor来自定义Beans"></a>1.8.1 使用BeanPostProcessor来自定义Beans</h4>
     </div>
 
     
@@ -242,7 +232,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/blog/tags/tomcat/" rel="tag"># tomcat</a>
+              <a href="/blog/tags/Spring/" rel="tag"># Spring</a>
           </div>
 
         
@@ -251,12 +241,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/blog/2020/08/26/Poller%E7%BA%BF%E7%A8%8B/" rel="prev" title="Poller线程">
-      <i class="fa fa-chevron-left"></i> Poller线程
+    <a href="/blog/2020/08/27/Tomcat%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E4%BC%98%E5%8C%96%E6%89%8B%E6%AE%B5/" rel="prev" title="Tomcat中的一些优化手段">
+      <i class="fa fa-chevron-left"></i> Tomcat中的一些优化手段
     </a></div>
       <div class="post-nav-item">
-    <a href="/blog/2020/09/28/Spring%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91/" rel="next" title="Spring文档翻译">
-      Spring文档翻译 <i class="fa fa-chevron-right"></i>
+    <a href="/blog/2020/10/05/%E5%B0%86PointcutAdvisor%E8%BD%AC%E5%8C%96%E6%88%90%E6%8B%A6%E6%88%AA%E5%99%A8%E5%88%97%E8%A1%A8/" rel="next" title="将PointcutAdvisor转化成拦截器列表">
+      将PointcutAdvisor转化成拦截器列表 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -316,7 +306,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E4%BA%8E%E9%9C%80%E8%A6%81%E9%A2%91%E7%B9%81%E5%88%9B%E5%BB%BA%E5%92%8C%E9%94%80%E6%AF%81%E7%9A%84%E5%AF%B9%E8%B1%A1%E7%9A%84%E4%BC%98%E5%8C%96"><span class="nav-number">1.</span> <span class="nav-text">对于需要频繁创建和销毁的对象的优化</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-IoC%E5%AE%B9%E5%99%A8"><span class="nav-number">1.</span> <span class="nav-text">1 IoC容器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-8-%E5%AE%B9%E5%99%A8%E6%89%A9%E5%B1%95%E7%82%B9"><span class="nav-number">1.1.</span> <span class="nav-text">1.8 容器扩展点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-8-1-%E4%BD%BF%E7%94%A8BeanPostProcessor%E6%9D%A5%E8%87%AA%E5%AE%9A%E4%B9%89Beans"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.8.1 使用BeanPostProcessor来自定义Beans</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
